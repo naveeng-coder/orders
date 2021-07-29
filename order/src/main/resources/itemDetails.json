@@ -1,0 +1,32 @@
+[
+	{
+		"itemName" : "laptop",
+		"itemId" : "l-1121",
+		"itemCatogiry" : "electronics"
+
+	},
+		{
+		"itemName" : "microweaveOven",
+		"itemId" : "M-545",
+		"itemCatogiry" : "electronics"
+
+	},
+		{
+		"itemName" : "SteelContainer",
+		"itemId" : "S-3541",
+		"itemCatogiry" : "goods"
+
+	},
+	{
+		"itemName" : "santoor",
+		"itemId" : "S-3313",
+		"itemCatogiry" : "detergent"
+
+	},
+	{
+		"itemName" : "table",
+		"itemId" : "t-4578",
+		"itemCatogiry" : "woodenItems"
+
+	}
+]

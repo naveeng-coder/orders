@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="16833999-e98b-462b-9e20-302d4cf0893b" >
+		<http:listener-connection host="0.0.0.0" port="8083" />
+	</http:listener-config>
+	<flow name="orderFlow" doc:id="5903a555-a17d-4285-b4ab-34cd43671c97" >
+		<http:listener doc:name="Listener" doc:id="a64ffb8a-aa44-40c6-8642-69fbbe35d896" config-ref="HTTP_Listener_config" path="test"/>
+		<ee:transform doc:name="Transform Message" doc:id="dd4b29f7-9981-4267-942f-99359a72a417" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var customerDetails = readUrl("classpath://CustomerDetails.json", "application/json")
+
+var orderDetails = readUrl("classpath://orderDetails.json", "application/json")
+var itemDetails = readUrl("classpath://itemDetails.json", "application/json")
+var name = "thanmayi"
+var getCustomerId =(customerDetails filter ($.CustomerName == name)).CustomerId[0]
+var getOrderDetails = ((orderDetails) filter ($.orderId contains getCustomerId))
+var customerAddress = (customerDetails filter ($.CustomerName == name)).Address 
+var customerEmail = (customerDetails filter ($.CustomerName == name)).CustomerEmail
+var items = getOrderDetails map (id) -> {
+	orderID : id.orderId,
+	Item : (itemDetails filter (id.orderId contains $.itemId)).itemName,
+	OrderedDate : id.orderDate,
+	DeliveryDate : id.deliveryDate
+}
+	
+
+var item = flatten (items) 
+
+
+---
+{
+	customerName : name,
+	customerId : getCustomerId,
+	customerOrders : item,
+	customerAddress : flatten(customerAddress),
+	customerEmail : customerEmail,
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="1a110c37-7c81-4b5f-9272-3181f2ffb0a1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var customers = readUrl("classpath://CustomerDetails.json", "application/json")
+var items = readUrl("classpath://itemDetails.json", "application/json")
+var orderDetails = readUrl("classpath://orderDetails.json", "application/json")
+
+---
+(customers map (customer)-> 
+	{
+	
+	customerName: customer.CustomerName,
+	customerId: customer.CustomerId,
+	orderDetails: (orderDetails filter ($.orderId contains customer.CustomerId)) map (id) -> 
+		{
+		itemName: (items filter (id.orderId contains $.itemId)).itemName[0],
+		(id),
+	},
+	customerAddress: customer.Address,
+	customerEmail: customer.CustomerEmail
+})
+	
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

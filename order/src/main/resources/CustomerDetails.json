@@ -1,0 +1,34 @@
+[
+	{
+		"CustomerName" : "naveen",
+		"CustomerId" : "n-1",
+		"CustomerEmail" : "naveen@xyz.com",
+		"Address" : ["1-123","kattarampur","karimnagar"]
+	},
+	{
+		"CustomerName" : "suman",
+		"CustomerId" : "s-1",
+		"CustomerEmail" : "suman@xyz.com",
+		"Address" : ["1-456","malkapur","karimnagar"]
+	},
+	{
+		"CustomerName" : "bhavani",
+		"CustomerId" : "b-1",
+		"CustomerEmail" : "bhavani@xyz.com",
+		"Address" : ["1-789","malkapur","karimnagar"]
+	},
+	{
+		"CustomerName" : "karthikeya",
+		"CustomerId" : "k-1",
+		"CustomerEmail" : "karthikeya@xyz.com",
+		"Address" : ["1-115","malkapur","karimnagar"]
+	},
+	{
+		"CustomerName" : "thanmayi",
+		"CustomerId" : "t-1",
+		"CustomerEmail" : "thanmayi@xyz.com",
+		"Address" : ["1-116","malkapur","karimnagar"]
+	}
+	
+
+]
